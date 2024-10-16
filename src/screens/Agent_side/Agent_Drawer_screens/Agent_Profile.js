@@ -10,7 +10,10 @@ import {
   View,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
-import {widthPercentageToDP as wp} from 'react-native-responsive-screen';
+import {
+  widthPercentageToDP,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import PhoneInput from 'react-native-phone-number-input';
@@ -41,9 +44,8 @@ const Agent_Profile = () => {
   const [youtubeLink, setYoutubeLink] = useState('');
   const [vimeoLink, setVimeoLink] = useState('');
 
-  const [ProfilePic, setProfilePic] = useState(null)
-
-  const handleProfilePic = async () => {
+  const [logo, setLogo] = useState(null);
+  const handleLogo = async () => {
     try {
       if (Platform.OS === 'android') {
         const granted = await PermissionsAndroid.request(
@@ -60,7 +62,7 @@ const Agent_Profile = () => {
         );
 
         if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
-          console.log('Camera permission denied');
+          console.log('File permission denied');
           return;
         }
       }
@@ -70,7 +72,7 @@ const Agent_Profile = () => {
         height: 400,
         cropping: true,
       }).then(image => {
-        setProfilePic(image.path);
+        setLogo(image.path);
         console.log(image);
       });
 
@@ -95,7 +97,7 @@ const Agent_Profile = () => {
           onPress={() => {
             navigation.goBack();
           }}>
-          <AntDesign name="arrowleft" color={Colors.black} size={24} />
+          <AntDesign name="arrowleft" color="blue" size={30} />
         </TouchableOpacity>
         <Text style={authstyles.headertext}>Profile</Text>
         <TouchableOpacity
@@ -113,15 +115,10 @@ const Agent_Profile = () => {
         </TouchableOpacity>
       </View>
       <ScrollView>
-        <TouchableOpacity onPress={handleProfilePic}>
-          <Image
-             source={ProfilePic ? { uri: ProfilePic } : images.pro}   
-            style={[
-              authstyles.avatar,
-              {alignSelf: 'center', marginTop: wp(10)},
-            ]}
-          />
-        </TouchableOpacity>
+        <Image
+          source={images.pro}
+          style={[authstyles.avatar, {alignSelf: 'center', marginTop: wp(10)}]}
+        />
 
         <View style={{marginTop: wp(10)}}>
           <Text style={authstyles.heading}>Username</Text>
@@ -133,11 +130,112 @@ const Agent_Profile = () => {
         </View>
 
         <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>First Name</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>John</Text>
+
+            <EvilIcons name="user" size={34} color={Colors.bahama} />
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Last Name</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>Smith</Text>
+
+            <EvilIcons name="user" size={34} color={Colors.bahama} />
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Title/ Position</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>Marketing Directo</Text>
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Licence No. / Ref No.</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>KW1002</Text>
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Tax Number</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>Max 28 Character</Text>
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Fax Number</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>Max 28 Character</Text>
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
           <Text style={authstyles.heading}>Email</Text>
           <View style={authstyles.inputview}>
             <Text style={authstyles.inputtext}>anc@gmail.com</Text>
 
             <Fontisto name="email" size={22} color={Colors.bahama} />
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Address</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>abc Street , Aus</Text>
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Company Name</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>Company Name</Text>
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Company Logo</Text>
+          {logo ? (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: 20,
+                borderRadius: 10,
+              }}>
+              <Image
+                resizeMode="contain"
+                source={{uri: logo}}
+                style={{width: 250, height: 250}}
+              />
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={handleLogo}
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+                margin: 20,
+                padding: 30,
+                borderRadius: 10,
+                backgroundColor: logo ? '' : Colors.gray,
+              }}>
+              <Text style={{color: Colors.white}}>Enter Your Company Logo</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>About Me</Text>
+          <View style={authstyles.inputview}>
+            <TextInput placeholder="About Me" style={authstyles.inputtext} />
           </View>
         </View>
 
@@ -159,17 +257,42 @@ const Agent_Profile = () => {
         </View>
 
         <View style={{marginTop: wp(2)}}>
-          <Text style={authstyles.heading}>Facebook Link</Text>
+          <Text style={authstyles.heading}>Skype</Text>
           <View style={authstyles.inputview}>
-            <Text style={authstyles.inputtext}>facebook.com</Text>
+            <Text style={authstyles.inputtext}>Skype</Text>
 
             <SimpleLineIcons
-              name="social-facebook"
+              name="social-skype"
               size={22}
               color={Colors.bahama}
             />
           </View>
         </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Twitter</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>
+              https://twitter.com/PropertiesKiwi
+            </Text>
+
+            <SimpleLineIcons
+              name="social-twitter"
+              size={22}
+              color={Colors.bahama}
+            />
+          </View>
+        </View>
+
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Website Url</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}>https://www.kiwi.sg/</Text>
+
+            <SimpleLineIcons name="globe" size={22} color={Colors.bahama} />
+          </View>
+        </View>
+
         <View style={{marginTop: wp(2)}}>
           <Text style={authstyles.heading}>Facebook Link</Text>
           <View style={authstyles.inputview}>
@@ -196,6 +319,19 @@ const Agent_Profile = () => {
           </View>
         </View>
 
+        <View style={{marginTop: wp(2)}}>
+          <Text style={authstyles.heading}>Youtube Url</Text>
+          <View style={authstyles.inputview}>
+            <Text style={authstyles.inputtext}></Text>
+
+            <SimpleLineIcons
+              name="social-youtube"
+              size={22}
+              color={Colors.bahama}
+            />
+          </View>
+        </View>
+
         <View style={{marginTop: wp(25), marginBottom: wp(4)}}>
           <Button
             title="Change Password"
@@ -204,16 +340,25 @@ const Agent_Profile = () => {
         </View>
 
         <TouchableOpacity
-          style={{alignSelf: 'center'}}
+          style={{
+            width: widthPercentageToDP(90),
+            height: widthPercentageToDP(14),
+            backgroundColor: 'red',
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+            borderRadius: 12,
+            elevation: 2,
+            margin: 20,
+          }}
           onPress={() => {
             // setShow(true);
           }}>
           <Text
             style={{
-              fontSize: 14,
+              fontSize: 16,
               fontFamily: fonts.Bold,
-              color: 'red',
-              marginBottom: wp(4),
+              color: Colors.white,
             }}>
             Delete My Account
           </Text>

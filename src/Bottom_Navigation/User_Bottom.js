@@ -1,5 +1,4 @@
 import {
-  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -34,17 +33,21 @@ import Affiliate_Member from '../screens/User_Side/Drawer_screens/Affiliate_Memb
 import Add_New_News_Payment from '../screens/Agent_side/Add_New_News_Payment';
 
 const User_Bottom = () => {
-  const windowWidth = Dimensions.get('window').width;
-  const itemWidth = windowWidth / 4;
-
   function CustomBottomTabBar({state, descriptors, navigation}) {
+    const getItemLayout = (data, index) => ({
+      length: 80,
+      offset: 80 * index,
+      index,
+    });
     return (
       <View style={styles.tabBarContainer}>
         <FlatList
+          initialScrollIndex={state?.index - 1}
           horizontal
           data={state.routes}
           keyExtractor={item => item.key}
           showsHorizontalScrollIndicator={false}
+          getItemLayout={getItemLayout}
           renderItem={({item, index}) => {
             const focused = state.index === index;
 

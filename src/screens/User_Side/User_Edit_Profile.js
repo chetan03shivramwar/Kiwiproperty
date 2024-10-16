@@ -40,6 +40,47 @@ const User_Edit_Profile = () => {
   const [youtubeLink, setYoutubeLink] = useState('');
   const [vimeoLink, setVimeoLink] = useState('');
 
+  const [ProfilePic, setProfilePic] = useState(null);
+
+  const handleProfilePic = async () => {
+    try {
+      if (Platform.OS === 'android') {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+          {
+            title: 'Kiwi App File Permission',
+            message:
+              'Kiwi App needs access to your File ' +
+              'so you can Choose awesome pictures.',
+            buttonNeutral: 'Ask Me Later',
+            buttonNegative: 'Cancel',
+            buttonPositive: 'OK',
+          },
+        );
+
+        if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+          console.log('File permission denied');
+          return;
+        }
+      }
+
+      const image = await ImageCropPicker.openPicker({
+        width: 300,
+        height: 400,
+        cropping: true,
+      }).then(image => {
+        setProfilePic(image.path);
+        console.log(image);
+      });
+
+      if (image) {
+        console.log('Selected Image:', image);
+      }
+    } catch (error) {
+      console.log('Error picking image:', error);
+    }
+  };
+
   return (
     <View style={authstyles.container}>
       <StatusBar
@@ -56,10 +97,11 @@ const User_Edit_Profile = () => {
         <TouchableOpacity style={{alignSelf: 'center', marginTop: wp(10)}}>
           <ImageBackground
             borderRadius={100}
-            source={images.pro}
+            source={ProfilePic ? {uri: ProfilePic} : images.pro}
             style={authstyles.avatar}>
             <TouchableOpacity
               activeOpacity={0.9}
+              onPress={handleProfilePic}
               style={{
                 width: wp(25),
                 height: wp(25),
